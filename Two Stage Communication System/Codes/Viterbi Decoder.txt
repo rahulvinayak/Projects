@@ -1,0 +1,130 @@
+module ViterbiDecoder (
+input [1:0] data_in,
+input clk,
+output reg data_out
+);
+// Define types directly without using typedef
+// 2-bit word type
+logic [1:0] word_2;
+// 4-bit next state type
+logic [1:0] word_4_NextState [0:3];
+// 3-bit word type
+logic [1:0] word_3 [0:2];
+// 3-bit word as bit type
+bit [1:0] word_3_bit [0:2];
+// 4-bit word type
+bit [3:0] word_4 [0:3];
+// 4-bit word as bit type
+bit [3:0] word_4_bit [0:3];
+// 2-bit memory type
+bit [1:0] memory_4 [0:3][0:1];
+// 4-bit memory as bit type
+bit [3:0] memory_4_bit [0:3][0:3];
+// 4-bit memory for next state type
+bit [1:0] memory_4_NextState [0:3][0:3];
+// 8-bit memory type
+bit [7:0] memory_8 [0:7];
+// 3-bit memory for traceback row type
+bit [1:0] memory_traceback_row [0:7][0:2];
+// 3-bit memory for traceback table type
+bit [1:0] memory_traceback_table [0:3][0:7][0:2];
+// Constants
+parameter [1:0][1:0][1:0] traceback_table = {{{2'b00, 2'b00, 2'b00}, {2'b11, 2'b10, 2'b11}, {2'b00, 2'b11,
+2'b10}, {2'b11, 2'b01, 2'b01}, {2'b00, 2'b00, 2'b11}, {2'b11, 2'b10, 2'b00}, {2'b00, 2'b11, 2'b01}, {2'b11,
+2'b01, 2'b10}},
+{{2'b11, 2'b00, 2'b00}, {2'b00, 2'b10, 2'b11}, {2'b11, 2'b11, 2'b10}, {2'b00,
+2'b01, 2'b01}, {2'b11, 2'b00, 2'b11}, {2'b00, 2'b10, 2'b00}, {2'b11, 2'b11, 2'b01}, {2'b00, 2'b01, 2'b10}},
+{{2'b10, 2'b11, 2'b00}, {2'b01, 2'b01, 2'b11}, {2'b10, 2'b00, 2'b10}, {2'b01,
+2'b10, 2'b01}, {2'b10, 2'b11, 2'b11}, {2'b01, 2'b01, 2'b00}, {2'b10, 2'b00, 2'b01}, {2'b01, 2'b10, 2'b10}},
+{{2'b01, 2'b11, 2'b00}, {2'b10, 2'b01, 2'b11}, {2'b01, 2'b00, 2'b10}, {2'b10,
+2'b10, 2'b01}, {2'b01, 2'b11, 2'b11}, {2'b10, 2'b01, 2'b00}, {2'b01, 2'b00, 2'b01}, {2'b10, 2'b10, 2'b10}}};
+parameter [1:0][3:0] outputTable = {{1'b0, 1'b0, 1'b0, 1'b1}, {1'b1, 1'b0, 1'b0, 1'b0}, {1'b0, 1'b1, 1'b0, 1'b0},
+{1'b0, 1'b0, 1'b1, 1'b0}};
+parameter [1:0][3:0][1:0] nextStateTable = {{{2'b00, 2'b00, 2'b00, 2'b10}, {2'b10, 2'b00, 2'b00, 2'b00},
+{2'b00, 2'b11, 2'b01, 2'b00}, {2'b00, 2'b01, 2'b11, 2'b00}},
+{{2'b11, 2'b00, 2'b00, 2'b10}, {2'b00, 2'b10, 2'b00, 2'b00}, {2'b11, 2'b11, 2'b10,
+2'b00}, {2'b00, 2'b01, 2'b01, 2'b00}},
+{{2'b10, 2'b11, 2'b00, 2'b10}, {2'b01, 2'b01, 2'b11, 2'b00}, {2'b10, 2'b00, 2'b10,
+2'b10}, {2'b01, 2'b10, 2'b01, 2'b10}},
+{{2'b01, 2'b11, 2'b00, 2'b10}, {2'b10, 2'b01, 2'b11, 2'b00}, {2'b01, 2'b00, 2'b10,
+2'b01}, {2'b10, 2'b10, 2'b01, 2'b10}}};
+// Function definitions
+function integer hammingDistance;
+input [1:0] a;
+begin
+case(a)
+2'b00: hammingDistance = 0;
+2'b01: hammingDistance = 1;
+2'b10: hammingDistance = 1;
+2'b11: hammingDistance = 2;
+default: hammingDistance = -1; // Invalid operation
+endcase
+end
+endfunction
+function integer conv_int;
+input [1:0] a;
+begin
+case(a)
+2'b00: conv_int = 0;
+2'b01: conv_int = 1;
+2'b10: conv_int = 2;
+2'b11: conv_int = 3;
+default: conv_int = -1; // Invalid operation
+endcase
+end
+endfunction
+// Registers
+reg [1:0] InitialState = 2'b00;
+reg [7:0] TracebackResult = 8'b0;
+reg [2:0] InputLevel = 3'd0;
+reg [2:0] i = 3'd0;
+reg [2:0] chosenPathIndex;
+reg [2:0] lowestPathMetricError = 3'd6;
+reg [1:0] currentState;
+reg [2:0] outputVector_index = 3'd0;
+reg [1:0] temp_output;
+always @(posedge clk) begin
+if (data_in != 2'bUU) begin
+i <= 3'd0;
+// Branch Metric Calculations
+while (i < 8) begin
+TracebackResult[i] <= TracebackResult[i] + hammingDistance(traceback_table[3-
+conv_int(InitialState)][7-i][2-InputLevel] ^ data_in);
+i <= i + 3'd1;
+end
+// Output the decoded data, delayed for 3 clock cycles
+data_out <= outputVector[outputVector_index];
+InputLevel <= InputLevel + 3'd1;
+if (InputLevel == 3'd3) begin
+// Select the correct path with the lowest path metric error
+i <= 3'd0;
+while (i < 8) begin
+if (lowestPathMetricError > TracebackResult[i]) begin
+lowestPathMetricError <= TracebackResult[i];
+chosenPathIndex <= i;
+end
+i <= i + 3'd1;
+end
+// Convert the selected path to corresponding output
+currentState <= InitialState;
+i <= 3'd0;
+while (i < 3) begin
+temp_output <= traceback_table[3-conv_int(InitialState)][7-chosenPathIndex][2-i];
+outputVector[outputVector_index] <= outputTable[3-conv_int(currentState)][3-
+conv_int(temp_output)];
+currentState <= nextStateTable[3-conv_int(currentState)][3-conv_int(temp_output)];
+i <= i + 3'd1;
+end
+// Set the initial state of the next stage
+InitialState <= currentState;
+// Reset variables
+InputLevel <= 3'd0;
+for (i = 0; i < 8; i = i + 3'd1) begin
+TracebackResult[i] <= 8'b0;
+end
+lowestPathMetricError <= 3'd6;
+outputVector_index <= outputVector_index + 3'd1;
+end
+end
+end
+endmodule

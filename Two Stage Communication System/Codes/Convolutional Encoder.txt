@@ -1,0 +1,63 @@
+module convolution(x,clk,reset,z1,z2);
+input x,clk,reset;
+output reg z1,z2;
+parameter [0:1]s0=2'b00;
+parameter [0:1]s1=2'b10;
+parameter[0:1]s2=2'b01;
+parameter[0:1]s3=2'b11;
+reg [0:1] ps,ns;
+always @(posedge clk or posedge reset)
+begin
+if (reset) 
+begin
+z1=1'b0;
+z2=1'b0;
+ps=s0;
+ns=s0;
+end
+else
+ps=ns;
+case (ps)
+s0: if (x==1'b1) begin
+z1=1'b1;
+z2=1'b1;
+ns=s1;
+end
+else begin
+z1=1'b0;
+z2=1'b0;
+ns=s0;
+end
+s1: if (x==1'b1) begin
+z1=1'b0;
+z2=1'b1;
+ns=s3;
+end
+else begin
+z1=1'b1;
+z2=1'b0;
+ns=s2;
+end
+s2: if (x==1'b1) begin
+z1=1'b0;
+z2=1'b0;
+ns=s1;
+end
+else begin
+z1=1'b1;
+z2=1'b1;
+ns=s0;
+end
+s3: if (x==1'b1) begin
+z1=1'b1;
+z2=1'b0;
+ns=s3;
+end
+else begin
+z1=1'b0;
+z2=1'b1;
+ns=s2;
+end
+endcase
+ end
+endmodule

@@ -1,0 +1,274 @@
+module pcmdecoder(pcmdip,clk,pcmdop);
+    input [7:0]pcmdip;
+	 input clk;
+    output reg [11:0]pcmdop;
+
+    always @(posedge clk)
+        begin
+
+            if (pcmdip==8'b00000000)
+                pcmdop=0;
+            else if (pcmdip==8'b00000001) 
+                pcmdop=3;
+            else if (pcmdip==8'b00000010)
+                pcmdop=5;
+            else if(pcmdip==8'b00000011) 
+                pcmdop=9;
+            else if(pcmdip==8'b00000101) 
+                pcmdop=11;
+            else if(pcmdip==8'b00000110) 
+                pcmdop=13;
+            else if(pcmdip==8'b00000111) 
+                pcmdop=15;
+            else if(pcmdip==8'b00001000) 
+                pcmdop=17;
+            else if(pcmdip==8'b00001001) 
+                pcmdop=19;
+            else if(pcmdip==8'b00001010) 
+                pcmdop=21;
+            else if(pcmdip==8'b00001011) 
+                pcmdop=23;
+            else if(pcmdip==8'b00001011) 
+                pcmdop=25;
+            else if(pcmdip==8'b00001100) 
+                pcmdop=27;
+            else if(pcmdip==8'b00001101) 
+                pcmdop=29;
+            else if(pcmdip==8'b00001110) 
+                pcmdop=31;
+            else if(pcmdip==8'b00001111)     
+                pcmdop=32;
+            else if(pcmdip==8'b00010000) 
+                pcmdop=33;
+            else if(pcmdip==8'b00010001) 
+                pcmdop=35;
+            else if(pcmdip==8'b00010010) 
+                pcmdop=37;
+            else if(pcmdip==8'b00010011) 
+                pcmdop=39;
+            else if(pcmdip==8'b00010100)
+                pcmdop=41;
+            else if(pcmdip==8'b00010101) 
+                pcmdop=43;
+            else if(pcmdip==8'b00010110) 
+                pcmdop=45;
+            else if(pcmdip==8'b00010111) 
+                pcmdop=47;
+            else if(pcmdip==8'b00011000) 
+                pcmdop=49;
+            else if(pcmdip==8'b00011001) 
+                pcmdop=51;
+            else if(pcmdip==8'b00011010) 
+                pcmdop=53;
+            else if(pcmdip==8'b00011011) 
+                pcmdop=55;
+            else if(pcmdip==8'b00011100) 
+                pcmdop=57;
+            else if(pcmdip==8'b00011101) 
+                pcmdop=59;
+            else if(pcmdip==8'b00011110) 
+                pcmdop=61;
+            else if(pcmdip==8'b00011111) 
+                pcmdop=63;
+
+            else if(pcmdip==8'b00100000) 
+                pcmdop=66;
+            else if(pcmdip==8'b00100001) 
+                pcmdop=70;
+            else if(pcmdip==8'b00100010) 
+                pcmdop=74;
+            else if(pcmdip==8'b00100011) 
+                pcmdop=78;
+            else if(pcmdip==8'b00100100) 
+                pcmdop=82;
+            else if(pcmdip==8'b00100101) 
+                pcmdop=86;
+            else if(pcmdip==8'b00100110) 
+                pcmdop=90;
+            else if(pcmdip==8'b00100111) 
+                pcmdop=94;
+            else if(pcmdip==8'b00101000) 
+                pcmdop=98;
+            else if(pcmdip==8'b00101001) 
+                pcmdop=102;
+            else if(pcmdip==8'b00101010) 
+                pcmdop=106;
+            else if(pcmdip==8'b00101011) 
+                pcmdop=110;
+            else if(pcmdip==8'b00101100) 
+                pcmdop=114;
+            else if(pcmdip==8'b00101101) 
+                pcmdop=118;
+            else if(pcmdip==8'b00101110) 
+                pcmdop=122;
+            else if(pcmdip==8'b00101111) 
+                pcmdop=126;
+            else if(pcmdip==8'b00110000) 
+                pcmdop=132;
+            else if(pcmdip==8'b00110001) 
+                pcmdop=140;
+            else if(pcmdip==8'b00110010) 
+                pcmdop=148;
+            else if(pcmdip==8'b00110011) 
+                pcmdop=156;
+            else if(pcmdip==8'b00110100) 
+                pcmdop=164;
+            else if(pcmdip==8'b00110101) 
+                pcmdop=172;
+            else if(pcmdip==8'b00110110) 
+                pcmdop=180;
+            else if(pcmdip==8'b00110111) 
+                pcmdop=188;
+            else if(pcmdip==8'b00111000) 
+                pcmdop=196;
+            else if(pcmdip==8'b00111001) 
+                pcmdop=204;
+            else if(pcmdip==8'b00111010) 
+                pcmdop=212;
+
+            else if(pcmdip==8'b00111011) 
+                pcmdop=220;
+            else if(pcmdip==8'b00111100) 
+                pcmdop=228;
+            else if(pcmdip==8'b00111101) 
+                pcmdop=236;
+            else if(pcmdip==8'b00111110) 
+                pcmdop=244;
+            else if(pcmdip==8'b00111111) 
+                pcmdop=252;
+
+            else if(pcmdip==8'b01000000) 
+                pcmdop=264;
+            else if(pcmdip==8'b01000001) 
+                pcmdop=280;
+            else if(pcmdip==8'b01000010) 
+                pcmdop=296;
+            else if(pcmdip==8'b01000011) 
+                pcmdop=312;
+            else if(pcmdip==8'b01000100) 
+                pcmdop=328;
+            else if(pcmdip==8'b01000101) 
+                pcmdop=344;
+            else if(pcmdip==8'b01000110) 
+                pcmdop=360;
+            else if(pcmdip==8'b01000111) 
+                pcmdop=376;
+            else if(pcmdip==8'b01001000) 
+                pcmdop=392;
+            else if(pcmdip==8'b01001001) 
+                pcmdop=408;
+            else if(pcmdip==8'b01001010) 
+                pcmdop=424;
+            else if(pcmdip==8'b01001011) 
+                pcmdop=440;
+            else if(pcmdip==8'b01001100) 
+                pcmdop=456;
+            else if(pcmdip==8'b01001101) 
+                pcmdop=472;
+            else if(pcmdip==8'b01001110) 
+                pcmdop=488;
+            else if(pcmdip==8'b01001111) 
+                pcmdop=504;
+
+            else if(pcmdip==8'b01010000) 
+                pcmdop=528;
+            else if(pcmdip==8'b01010001) 
+                pcmdop=560;
+            else if(pcmdip==8'b01010010) 
+                pcmdop=592;
+            else if(pcmdip==8'b01010011) 
+                pcmdop=624;
+            else if(pcmdip==8'b01010100) 
+                pcmdop=656;
+            else if(pcmdip==8'b01010101) 
+                pcmdop=688;
+            else if(pcmdip==8'b01010110) 
+                pcmdop=720;
+            else if(pcmdip==8'b01010111) 
+                pcmdop=752;
+            else if(pcmdip==8'b01011000) 
+                pcmdop=784;
+            else if(pcmdip==8'b01011001) 
+                pcmdop=816;
+            else if(pcmdip==8'b01011010) 
+                pcmdop=848;
+            else if(pcmdip==8'b01011011) 
+                pcmdop=880;
+            else if(pcmdip==8'b01011100) 
+                pcmdop=912;
+            else if(pcmdip==8'b01011101) 
+                pcmdop=944;
+            else if(pcmdip==8'b01011110) 
+                pcmdop=976;
+            else if(pcmdip==8'b01011111) 
+                pcmdop=1008;
+  
+            else if(pcmdip==8'b01100000) 
+                pcmdop=1056;
+            else if(pcmdip==8'b01100001) 
+                pcmdop=1120;
+            else if(pcmdip==8'b01100010) 
+                pcmdop=1184;
+            else if(pcmdip==8'b01100011) 
+                pcmdop=1248;
+            else if(pcmdip==8'b01100100) 
+                pcmdop=1312;
+            else if(pcmdip==8'b01100101) 
+                pcmdop=1376;
+            else if(pcmdip==8'b01100110) 
+                pcmdop=1440;
+            else if(pcmdip==8'b01100111) 
+                pcmdop=1504;
+            else if(pcmdip==8'b01101000) 
+                pcmdop=1568;
+            else if(pcmdip==8'b01101001) 
+                pcmdop=1632;
+            else if(pcmdip==8'b01101010) 
+                pcmdop=1696;
+            else if(pcmdip==8'b01101011) 
+                pcmdop=1760;
+            else if(pcmdip==8'b01101100) 
+                pcmdop=1824;
+            else if(pcmdip==8'b01101101) 
+                pcmdop=1888;
+            else if(pcmdip==8'b01101110) 
+                pcmdop=1952;
+            else if(pcmdip==8'b01101111) 
+                pcmdop=2016;
+
+            else if(pcmdip==8'b01110000) 
+                pcmdop=2112;
+            else if(pcmdip==8'b01110001) 
+                pcmdop=2240;
+            else if(pcmdip==8'b01110010) 
+                pcmdop=2368;
+            else if(pcmdip==8'b01110011) 
+                pcmdop=2496;
+            else if(pcmdip==8'b01110100) 
+                pcmdop=2624;
+            else if(pcmdip==8'b01110101) 
+                pcmdop=2752;
+            else if(pcmdip==8'b01110110) 
+                pcmdop=2880;
+            else if(pcmdip==8'b01110111) 
+                pcmdop=3008;
+            else if(pcmdip==8'b01111000) 
+                pcmdop=3136;
+            else if(pcmdip==8'b01111001) 
+                pcmdop=3264;
+            else if(pcmdip==8'b01111010) 
+                pcmdop=3392;
+            else if(pcmdip==8'b01111011) 
+                pcmdop=3520;
+            else if(pcmdip==8'b01111100) 
+                pcmdop=3648;
+            else if(pcmdip==8'b01111101) 
+                pcmdop=3776;
+            else if(pcmdip==8'b01111110) 
+                pcmdop=3904;
+            else if(pcmdip==8'b01111111) 
+                pcmdop=4095;
+    end
+endmodule
+ 
+
